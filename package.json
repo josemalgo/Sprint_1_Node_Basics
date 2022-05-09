@@ -1,0 +1,15 @@
+{
+  "name": "nodetests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "Entrega1.1_Function&Template.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "adm-zip": "^0.5.9"
+  }
+}
