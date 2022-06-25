@@ -1,5 +1,6 @@
-const Fs = require('fs');
+const fs = require('fs');
 const AdmZip = require('adm-zip');
+const { exec } = require('child_process');
 
 //------------------- NIVELL 1 - EXERCICI 1 ------------------------
 
@@ -19,35 +20,51 @@ const AdmZip = require('adm-zip');
 
 //------------------- NIVELL 1 - EXERCICI 2 ------------------------
 
-Fs.writeFile('helloWorld.txt', 'Hello Word', function (err) {
-    if(err) {
-        return console.log(err);
-    }
-    console.log('Hello World > helloWorld.txt');
-});
+// fs.writeFile('helloWorld.txt', 'Hello Word', function (err) {
+//     if(err) {
+//         return console.log(err);
+//     }
+//     console.log('Hello World > helloWorld.txt');
+// });
 
 //------------------- NIVELL 1 - EXERCICI 3 ------------------------
 
-Fs.readFile('helloWorld.txt', 'utf8', (err, data) => {
-    if (err) {
-        console.log(err);
-    }
-    console.log(data);
-});
+// fs.readFile('helloWorld.txt', 'utf8', (err, data) => {
+//     if (err) {
+//         console.log(err);
+//     }
+//     console.log(data);
+// });
 
 //------------------- NIVELL 2 - EXERCICI 1 ------------------------
 
-async function createZipArchive() {
+// async function createZipArchive() {
     
-    try {
-        const zip = new AdmZip();
-        const outputFile = "helloWorld.zip";
-        zip.addLocalFile("./helloWorld.txt");
-        zip.writeZip(outputFile);
-        console.log(`Created ${outputFile} succesfully`);
-    } catch (err) {
-        console.log(`Something went wrong. ${err}`);
-    }
-}
+//     try {
+//         const zip = new AdmZip();
+//         const outputFile = "helloWorld.zip";
+//         zip.addLocalFile("./helloWorld.txt");
+//         zip.writeZip(outputFile);
+//         console.log(`Created ${outputFile} succesfully`);
+//     } catch (err) {
+//         console.log(`Something went wrong. ${err}`);
+//     }
+// }
 
-createZipArchive();
+// createZipArchive();
+
+//------------------- NIVELL 2 - EXERCICI 2 ------------------------
+
+exec('dir ', (error, stdout, stderr ) => {
+    if (error) {
+        console.error(`error: ${error.message}`);
+        return;
+    }
+
+    if (stderr) {
+        console.log(`stderr: ${stderr}`);
+        return;
+    }
+
+    console.log(`Salida: ${stdout}`);
+});
