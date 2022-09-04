@@ -1,7 +1,7 @@
 const fs = require('fs').promises;
 const AdmZip = require('adm-zip');
 const { exec } = require('child_process');
-const { scrypt, randomFill, createCipheriv } = await import('node:crypto');
+const { scrypt, randomFill, createCipheriv } = require('node:crypto');
 
 //------------------- NIVELL 1 - EXERCICI 1 ------------------------
 
@@ -109,7 +109,7 @@ encodingFiles();
 
 //------------------- NIVELL 3 - EXERCICI 2 ------------------------
 
-async function cipherFile() {
+async function cipherFile(file) {
 
     const algorithm = 'aes-192-cbc';
     const password = 'Password used to generate key';
@@ -122,19 +122,41 @@ async function cipherFile() {
 
             const cipher = createCipheriv(algorithm, key, iv);
 
-            data = readFileEx1('n3e1B64.txt')
+            data = readFileEx1(file).toString('utf8');
             let encrypted = cipher.update(data, 'utf8', 'hex');
             encrypted += cipher.final('hex');
             
-            fs.writeFile('B64ToAes.txt', encrypted, function (err) {
+            let fileName = file.split('.')[0] + 'ToAES.txt';
+            fs.writeFile(fileName , encrypted, function (err) {
                 if(err) {
                     return console.log(err);
                 }
-            })
-
-        })
-    })
+            });
+            
+            deleteFile(file);
+        });
+    });
 
 }
 
-cipherFile();
+function deleteFile(file){
+
+    const command = 'del ' + file;
+    exec(command, (error, stdout, stderr ) => {
+
+        if (error) {
+            console.error(`error: ${error.message}`);
+            return;
+        }
+        
+        if (stderr) {
+            console.log(`stderr: ${stderr}`);
+            return;
+        }
+        
+        console.log(`Ficheros eliminados con éxito`);
+    });
+}
+
+cipherFile('n3e1B64.txt');
+cipherFile('n3e1Hex.txt');
