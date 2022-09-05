@@ -1,7 +1,11 @@
 const fs = require('fs').promises;
 const AdmZip = require('adm-zip');
 const { exec } = require('child_process');
-const { scrypt, randomFill, createCipheriv } = require('node:crypto');
+const { scrypt,
+    scryptSync, 
+    randomFill, 
+    createCipheriv,
+    createDecipheriv  } = require('node:crypto');
 
 //------------------- NIVELL 1 - EXERCICI 1 ------------------------
 
@@ -127,7 +131,7 @@ async function cipherFile(file) {
             encrypted += cipher.final('hex');
             
             let fileName = file.split('.')[0] + 'ToAES.txt';
-            fs.writeFile(fileName , encrypted, function (err) {
+            fs.writeFile(fileName , encrypted + ':' + iv, function (err) {
                 if(err) {
                     return console.log(err);
                 }
@@ -160,3 +164,29 @@ function deleteFile(file){
 
 cipherFile('n3e1B64.txt');
 cipherFile('n3e1Hex.txt');
+
+//------------------- NIVELL 3 - EXERCICI 3 ------------------------
+
+async function deCipherFile(file) {
+
+    const encryptedData = await readFileEx1(file);
+
+    const algorithm = 'aes-192-cbc';
+    const password = 'Password used to generate key';
+
+    const key = scryptSync(password, 'salt', 24);
+    const iv = Buffer.from(encryptedData.split(':')[1], 'base64');
+
+    const decipher = createDecipheriv(algorithm, key, iv);
+
+    const encrypted = encryptedData.split(':')[0];
+
+    let decrypted = decipher.update(encrypted, 'hex', 'utf8');
+    decrypted += decipher.final('utf8');
+
+    console.log(decrypted);
+
+}
+
+deCipherFile('n3e1B64ToAES.txt');
+deCipherFile('n3e1HexToAES.txt');
