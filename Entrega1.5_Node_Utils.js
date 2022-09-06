@@ -120,10 +120,11 @@ async function cipherFile(file) {
 
     scrypt(password, 'salt', 24, (err, key) => {
         if (err) throw err;
-
+        
         randomFill(new Uint8Array(16), (err, iv) => {
             if (err) throw err;
 
+            console.log(key);
             const cipher = createCipheriv(algorithm, key, iv);
 
             data = readFileEx1(file).toString('utf8');
@@ -143,7 +144,7 @@ async function cipherFile(file) {
 
 }
 
-function deleteFile(file){
+async function deleteFile(file){
 
     const command = 'del ' + file;
     exec(command, (error, stdout, stderr ) => {
@@ -168,24 +169,23 @@ cipherFile('n3e1Hex.txt');
 //------------------- NIVELL 3 - EXERCICI 3 ------------------------
 
 async function deCipherFile(file) {
-
+    
     const encryptedData = await readFileEx1(file);
-
+    
     const algorithm = 'aes-192-cbc';
     const password = 'Password used to generate key';
 
     const key = scryptSync(password, 'salt', 24);
-    const iv = Buffer.from(encryptedData.split(':')[1], 'base64');
-
+    const iv = encryptedData.split(':')[1];
+    
     const decipher = createDecipheriv(algorithm, key, iv);
-
+    
     const encrypted = encryptedData.split(':')[0];
-
+    
     let decrypted = decipher.update(encrypted, 'hex', 'utf8');
     decrypted += decipher.final('utf8');
-
+    
     console.log(decrypted);
-
 }
 
 deCipherFile('n3e1B64ToAES.txt');
